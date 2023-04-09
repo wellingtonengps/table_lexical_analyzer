@@ -4,16 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7be77daf-04f1-433a-bfde-871c5ccc2135" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Scanner.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Token.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/table_lexical_analyzer.iml" afterDir="false" />
+    <list default="true" id="7be77daf-04f1-433a-bfde-871c5ccc2135" name="Changes" comment="professor implementation">
+      <change afterPath="$PROJECT_DIR$/src/sample1.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Scanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Scanner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Token.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,10 +50,16 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Repositorio_Local\table_lexical_analyzer\src" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Build" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="table_lexical_analyzer" />
+      <option name="PROGRAM_PARAMETERS" value="src/sample1.txt" />
       <projectPathOnTarget name="projectPathOnTarget" value="/mnt/d/Programas/IntelliJ IDEA 2022.3.3/jbr/bin /table_lexical_analyzer" />
       <target name="WSL - Ubuntu-22.04" />
       <method v="2">
@@ -74,11 +76,35 @@
       <option name="presentableId" value="Default" />
       <updated>1680911369025</updated>
       <workItem from="1680911370289" duration="1142000" />
-      <workItem from="1680912588110" duration="6654000" />
+      <workItem from="1680912588110" duration="6859000" />
+      <workItem from="1680974877286" duration="1361000" />
+      <workItem from="1681076212518" duration="1072000" />
     </task>
+    <task id="LOCAL-00001" summary="professor implementation">
+      <created>1680920552835</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1680920552835</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="professor implementation" />
+    <option name="LAST_COMMIT_MESSAGE" value="professor implementation" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.util.EmptyStackException" package="java.util" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

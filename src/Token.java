@@ -26,11 +26,12 @@ public class Token {
         return col;
     }
 
-    public int getType() {
+    public int getToken() {
         return type;
     }
 
     public String getLexeme() {
         return lexeme;
     }
+
 }

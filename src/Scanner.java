@@ -1,5 +1,4 @@
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PushbackInputStream;
 import java.util.Stack;
@@ -8,10 +7,10 @@ public class Scanner {
 
     private class CharInput {
         char ch;
-        int l, c;
-        public CharInput( char ch, int l, int c) {
-            this.l = l;
-            this.c = c;
+        int line, col;
+        public CharInput( char ch, int l, int c){
+            this.line = l;
+            this.col = c;
             this.ch = ch;
         }
     }
@@ -19,28 +18,18 @@ public class Scanner {
     private Stack<CharInput> buf;
 
     private PushbackInputStream file;
+
+    private int line, column;
+
+    private String lexeme;
+
     //armarzenar todos os estados que são processados
     private Stack<Integer> stack;
-
     private boolean flag_eof = false;
-    private String lexeme;
-    private int line, column;
-    private int Type[] = {Token.VAR, Token.INT, Token.PLUS, Token.MULT, Token.EQ, Token.SEMI, Token.EOF};
 
+    /* Automata settings */
 
-    //Autômato
-    private final int CAT_EOF = 0;
-    private final int CAT_LETTER = 1;
-    private final int CAT_DIGIT = 2;
-    private final int CAT_PLUS = 3;
-    private final int CAT_MULT = 4;
-    private final int CAT_EQ = 5;
-    private final int CAT_SEMI = 6;
-    private final int CAT_DIV = 7;
-    private final int CAT_BKL = 7;
-    private final int CAT_WS = 9;
-    private final int CAT_ANY = 10;
-
+    //States
     private final int ST_INIT = 0;
     private final int ST_1 = 1;
     private final int ST_2 = 2;
@@ -55,19 +44,37 @@ public class Scanner {
     private final int ST_EOF = 11;
     private final int ST_SKIP = 12;
     private final int ST_ERROR = 13;
-    private final int ST_BAD = -1;
+    private final int ST_BAD = -2;
+
+    //Token Type
+    private final int Type[] = {Token.VAR, Token.INT, Token.PLUS, Token.MULT, Token.EQ, Token.SEMI, Token.EOF};
+
+    //Categories
+    private final int CAT_EOF = 0;
+    private final int CAT_LETTER = 1;
+    private final int CAT_DIGIT = 2;
+    private final int CAT_PLUS = 3;
+    private final int CAT_MULT = 4;
+    private final int CAT_EQ = 5;
+    private final int CAT_SEMI = 6;
+    private final int CAT_DIV = 7;
+    private final int CAT_BKL = 7;
+    private final int CAT_WS = 9;
+    private final int CAT_ANY = 10;
 
     //quantidade de estados e possiveis tolkens
     private final int[][] d;
 
     //func de transição
-    public Scanner(String path) throws FileNotFoundException {
+    public Scanner(String path) throws IOException {
         //abrir arquivo;
         file = new PushbackInputStream(new FileInputStream(path));
 
+        buf = new Stack<CharInput>();
+
         //init atributos
         stack = new Stack<Integer>();
-        buf = new Stack<CharInput>();
+
 
         d = new int[13][11];
         // transitions for inital state
@@ -226,32 +233,6 @@ public class Scanner {
         d[ST_EOF][CAT_BKL] = ST_ERROR;
         d[ST_EOF][CAT_WS] = ST_ERROR;
         d[ST_EOF][CAT_ANY] = ST_ERROR;
-
-
-    }
-
-    //testa se um estado é final
-    private boolean isFinal(int state) {
-        if(state >= ST_VAR && state < ST_SKIP){
-            return true;
-        }
-        return false;
-    }
-
-    private char nextChar() throws IOException {
-        int ch = file.read();
-        if(ch == -1){
-            flag_eof = true;
-            return '\0';
-        }
-        if((char)ch == '\n'){ //nova linha
-            line++;
-            column = 0;
-        } else {
-            column++;
-        }
-        buf.push(new CharInput((char) ch, line, column));
-        return (char) ch;
     }
 
     private int chatCat(char ch) {
@@ -259,7 +240,7 @@ public class Scanner {
             return CAT_EOF;
         }
         if (ch >= 'a' && ch <= 'z') {
-            return CAT_MULT;
+            return CAT_LETTER;
         }
         if (ch >= '0' && ch <= '9') {
             return CAT_DIGIT;
@@ -287,19 +268,43 @@ public class Scanner {
         }
     }
 
-    //retroceder na entrada, quando tiver que voltar no processamento
-    private void rollback() throws IOException {
-        line = buf.peek().l;
-        column = buf.peek().c;
-
-        file.unread(buf.pop().ch);
-
-        //voltar a linha e coluna
-        lexeme = lexeme.substring(0, lexeme.length()-1);
+    //testa se um estado é final
+    private boolean isFinal(int state) {
+        if(state >= ST_VAR && state < ST_SKIP || state == ST_EOF){
+            return true;
+        }
+        return false;
     }
 
     private boolean isSkip(int state) {
         return state == ST_SKIP;
+    }
+
+    private char nextChar() throws IOException {
+        int ch = file.read();
+        if(ch == -1){
+            flag_eof = true;
+            return '\0';
+        }
+        if((char)ch == '\n'){ //nova linha
+            line++;
+            column = 0;
+        } else {
+            column++;
+        }
+        buf.push(new CharInput((char) ch, line, column));
+        return (char) ch;
+    }
+
+    //retroceder na entrada, quando tiver que voltar no processamento
+    private void rollback() throws IOException {
+        line = buf.peek().line;
+        column = buf.peek().col;
+
+        file.unread(buf.pop().ch);
+
+        //voltar a linha e coluna
+        lexeme = lexeme.substring(0, lexeme.length()-1); //trunca o lexeme
     }
 
     private void runAFD(int state) throws IOException {
@@ -313,7 +318,7 @@ public class Scanner {
         char ch;
         int cat;
 
-        while (state != ST_INIT) {
+        while (state != ST_ERROR) {
             ch = nextChar();
             lexeme = lexeme + ch;
             stack.push(state);
@@ -333,6 +338,7 @@ public class Scanner {
 
         int state = ST_INIT;
 
+        //processamento
         do {
             runAFD(state);
             //pega ultimo da stack
@@ -358,6 +364,4 @@ public class Scanner {
 
         return null;
     }
-
-
 }
